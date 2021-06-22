@@ -1,7 +1,7 @@
 package main
 
 import (
-	"gitutils/cmd"
+	"github.com/aadityachapagain/gitutils/cmd"
 
 	"github.com/spf13/cobra"
 )
