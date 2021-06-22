@@ -8,7 +8,7 @@ import (
 
 func main() {
 	var rootCmd = &cobra.Command{
-		Use: "Git Utils",
+		Use: "gitutils",
 		Long: `
 	Easy to use github username switcher ,
 	Helpful for person who have more than 1 github users and need to switch between them regularly`,
