@@ -50,15 +50,14 @@ func isFileExist(path string) bool {
 	return !os.IsNotExist(err)
 }
 
-func getActiveUserConfig() (gitconfig, error) {
+func getUserConfig(userConfigPath string) (gitconfig, error) {
 	currentconfig := gitconfig{}
 
-	ghconfig := path.Join(home, ghConfigFile)
-	if !isFileExist(ghconfig) {
-		return gitconfig{}, fmt.Errorf("%s doesn't exist!\nTry login using github cli,  https://github.com/cli/cli#installation", ghconfig)
+	if !isFileExist(userConfigPath) {
+		return gitconfig{}, fmt.Errorf("%s doesn't exist!\nTry login using github cli,  https://github.com/cli/cli#installation and run \">gitutils update\" ", userConfigPath)
 	}
 
-	fr, err := os.ReadFile(ghconfig)
+	fr, err := os.ReadFile(userConfigPath)
 	if err != nil {
 		return gitconfig{}, err
 	}
@@ -69,6 +68,12 @@ func getActiveUserConfig() (gitconfig, error) {
 	}
 
 	return currentconfig, nil
+}
+
+func getActiveUserConfig() (gitconfig, error) {
+	userConfigPath := path.Join(home, ghConfigFile)
+	return getUserConfig(userConfigPath)
+
 }
 
 func needUpdates() bool {
