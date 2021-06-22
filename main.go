@@ -10,8 +10,8 @@ func main() {
 	var rootCmd = &cobra.Command{
 		Use: "gitutils",
 		Long: `
-	Easy to use github username switcher ,
-	Helpful for person who have more than 1 github users and need to switch between them regularly`,
+Easy to use github username switcher ,
+Helpful for person who have more than 1 github users and need to switch between them regularly`,
 	}
 
 	rootCmd.AddCommand(cmd.SwtichGit)
