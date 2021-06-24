@@ -57,7 +57,10 @@ func listUsers() {
 	for _, user := range users {
 		user = strings.TrimSpace(user)
 		if !(user == strings.TrimSpace(currentUserConfig.User.Username)) {
-			fmt.Println(user)
+			_, err := getUserConfig(path.Join(home, switchConfigPath, user, "hosts.yml"))
+			if err == nil {
+				fmt.Println(user)
+			}
 		}
 	}
 }
