@@ -25,11 +25,15 @@ type useridentifier struct {
 func updateDirectoryTree() {
 	newConfig := gitconfig{}
 
-	ghconfig := home + ghConfigFile
+	ghconfig := path.Join(home, ghConfigFile)
 
 	fr, _ := os.ReadFile(ghconfig)
 
-	_ = yaml.Unmarshal(fr, &newConfig)
+	err := yaml.Unmarshal(fr, &newConfig)
+
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	// make directory if not exist
 	newConfigDir := path.Join(home, switchConfigPath, newConfig.User.Username)
@@ -42,7 +46,7 @@ func updateDirectoryTree() {
 
 	fw.Write(fr)
 
-	log.Printf("Successfully created new config node as %s", newConfig.User.Username)
+	log.Printf("Successfully updated config node as %s", newConfig.User.Username)
 }
 
 func isFileExist(path string) bool {
@@ -95,9 +99,21 @@ func needUpdates() bool {
 	requiredUserConfig := path.Join(home, switchConfigPath, currentconfig.User.Username, "hosts.yml")
 	if !isFileExist(requiredUserConfig) {
 		return true
-	} else {
+	}
+
+	userconfig, err := getUserConfig(requiredUserConfig)
+	if err != nil {
+		log.Fatalf(" error : %v ", err)
+	}
+
+	isSameConfig := strings.TrimSpace(userconfig.User.Username) == strings.TrimSpace(currentconfig.User.Username) &&
+		strings.TrimSpace(userconfig.User.Oauth_token) == strings.TrimSpace(currentconfig.User.Oauth_token)
+
+	if isSameConfig {
 		log.Printf("Already has config node of logged in user : %s \n", currentconfig.User.Username)
 		return false
+	} else {
+		return true
 	}
 }
 
