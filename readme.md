@@ -28,3 +28,7 @@ Currently It only support installation through **Go**.
 
 * Switch to specifed user
     > gitutils switch <github_username>
+
+## Improvements
+- Add device authorization through cli
+- Automatic syncing of github credentials
