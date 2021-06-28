@@ -40,6 +40,16 @@ func overrideFile(path string, content []byte) error {
 	return nil
 }
 
+func createCredential(username string, token string) error {
+	credentialFile := path.Join(home, switchConfigPath, credentialCacheFile)
+	if !isFileExist(path.Dir(credentialFile)) {
+		_ = os.MkdirAll(path.Dir(credentialFile), os.ModePerm)
+	}
+
+	err := overrideFile(credentialFile, []byte(fmt.Sprintf(credentialFormatter, username, token)))
+	return err
+}
+
 func switchConfig(newUser string) {
 
 	newUserConfigpath := path.Join(home, switchConfigPath, newUser, ghConfigFile)
@@ -67,6 +77,10 @@ func switchConfig(newUser string) {
 	defaultConfigPath := path.Join(defaultConigdir, ghConfigFile)
 
 	err = overrideFile(defaultConfigPath, newUserCofigbytes)
+	if err != nil {
+		log.Fatal(err)
+	}
+	err = createCredential(newUserConfig.User.Username, newUserConfig.User.Oauth_token)
 	if err != nil {
 		log.Fatal(err)
 	}
