@@ -86,6 +86,10 @@ func switchConfig(newUser string) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	git.CacheCredential(credentialFile)
+	err = git.CacheCredential(credentialFile)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	fmt.Printf("Successfully Switch to %s user! \n", newUser)
 }
