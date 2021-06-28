@@ -22,7 +22,7 @@ var SwtichGit = &cobra.Command{
 	},
 }
 
-func OverrideFile(path string, content []byte) error {
+func overrideFile(path string, content []byte) error {
 	f, err := os.OpenFile(path, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0755)
 
 	if err != nil {
@@ -42,11 +42,11 @@ func OverrideFile(path string, content []byte) error {
 
 func switchConfig(newUser string) {
 
-	newUserConfigpath := path.Join(home, switchConfigPath, newUser, "hosts.yml")
+	newUserConfigpath := path.Join(home, switchConfigPath, newUser, ghConfigFile)
 
 	if !isFileExist(newUserConfigpath) {
 		log.Fatalf(`
-		User : %s dosen't have any configs !
+		You dosen't have any configs for user: %s!
 		Please Run ">gitutils list" to see list of authenticated users
 		Or Run ">gitutils update" to sync with authenticated github User`, newUser)
 	}
@@ -60,16 +60,13 @@ func switchConfig(newUser string) {
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	defaultConfigPath := path.Join(home, ghConfigFile)
-	if !isFileExist(defaultConfigPath) {
-		log.Fatalf(`
-		%s Dosen't Exist, try installing github cli and do gh auth to create authenticated config file
-
-		`, defaultConfigPath)
+	defaultConigdir := path.Join(home, ghConfigdir)
+	if !isFileExist(defaultConigdir) {
+		_ = os.MkdirAll(defaultConigdir, os.ModePerm)
 	}
+	defaultConfigPath := path.Join(defaultConigdir, ghConfigFile)
 
-	err = OverrideFile(defaultConfigPath, newUserCofigbytes)
+	err = overrideFile(defaultConfigPath, newUserCofigbytes)
 	if err != nil {
 		log.Fatal(err)
 	}

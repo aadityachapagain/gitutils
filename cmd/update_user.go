@@ -25,9 +25,9 @@ type useridentifier struct {
 func updateDirectoryTree() {
 	newConfig := gitconfig{}
 
-	ghconfig := path.Join(home, ghConfigFile)
+	ghconfigpath := path.Join(home, ghConfigdir, ghConfigFile)
 
-	fr, _ := os.ReadFile(ghconfig)
+	fr, _ := os.ReadFile(ghconfigpath)
 
 	err := yaml.Unmarshal(fr, &newConfig)
 
@@ -41,7 +41,7 @@ func updateDirectoryTree() {
 		_ = os.MkdirAll(newConfigDir, os.ModePerm)
 	}
 
-	fw, _ := os.Create(path.Join(home, switchConfigPath, newConfig.User.Username, "hosts.yml"))
+	fw, _ := os.Create(path.Join(newConfigDir, ghConfigFile))
 	defer fw.Close()
 
 	fw.Write(fr)
@@ -75,7 +75,7 @@ func getUserConfig(userConfigPath string) (gitconfig, error) {
 }
 
 func getActiveUserConfig() (gitconfig, error) {
-	userConfigPath := path.Join(home, ghConfigFile)
+	userConfigPath := path.Join(home, ghConfigdir, ghConfigFile)
 	return getUserConfig(userConfigPath)
 
 }
@@ -96,7 +96,7 @@ func needUpdates() bool {
 		log.Fatalf(" error : %v ", err)
 	}
 
-	requiredUserConfig := path.Join(home, switchConfigPath, currentconfig.User.Username, "hosts.yml")
+	requiredUserConfig := path.Join(home, switchConfigPath, currentconfig.User.Username, ghConfigFile)
 	if !isFileExist(requiredUserConfig) {
 		return true
 	}

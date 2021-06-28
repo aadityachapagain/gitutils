@@ -41,8 +41,9 @@ func listUsers() {
 	activeUserColor := color.New(color.FgHiMagenta).Add(color.Bold).Add(color.Italic)
 
 	currentUserConfig, err := getActiveUserConfig()
-	if err != nil {
-		log.Fatal(err)
+	if err == nil {
+		fmt.Println("Authenticated Github users: ")
+		activeUserColor.Println(currentUserConfig.User.Username + "*")
 	}
 
 	// init slices of users
@@ -52,8 +53,6 @@ func listUsers() {
 		log.Fatal(err)
 	}
 
-	fmt.Println("Authenticated Github users: ")
-	activeUserColor.Println(currentUserConfig.User.Username + "*")
 	for _, user := range users {
 		user = strings.TrimSpace(user)
 		if !(user == strings.TrimSpace(currentUserConfig.User.Username)) {
