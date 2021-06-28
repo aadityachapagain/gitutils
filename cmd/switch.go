@@ -6,6 +6,7 @@ import (
 	"os"
 	"path"
 
+	"github.com/aadityachapagain/gitutils/git"
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
 )
@@ -22,8 +23,12 @@ var SwtichGit = &cobra.Command{
 	},
 }
 
-func overrideFile(path string, content []byte) error {
-	f, err := os.OpenFile(path, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0755)
+func overrideFile(filepath string, content []byte) error {
+	if !isFileExist(path.Dir(filepath)) {
+		_ = os.MkdirAll(path.Dir(filepath), os.ModePerm)
+	}
+
+	f, err := os.OpenFile(filepath, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0755)
 
 	if err != nil {
 		return err
@@ -40,14 +45,11 @@ func overrideFile(path string, content []byte) error {
 	return nil
 }
 
-func createCredential(username string, token string) error {
+func createCredential(username string, token string) (string, error) {
 	credentialFile := path.Join(home, switchConfigPath, credentialCacheFile)
-	if !isFileExist(path.Dir(credentialFile)) {
-		_ = os.MkdirAll(path.Dir(credentialFile), os.ModePerm)
-	}
 
 	err := overrideFile(credentialFile, []byte(fmt.Sprintf(credentialFormatter, username, token)))
-	return err
+	return credentialFile, err
 }
 
 func switchConfig(newUser string) {
@@ -80,9 +82,10 @@ func switchConfig(newUser string) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	err = createCredential(newUserConfig.User.Username, newUserConfig.User.Oauth_token)
+	credentialFile, err := createCredential(newUserConfig.User.Username, newUserConfig.User.Oauth_token)
 	if err != nil {
 		log.Fatal(err)
 	}
+	git.CacheCredential(credentialFile)
 	fmt.Printf("Successfully Switch to %s user! \n", newUser)
 }

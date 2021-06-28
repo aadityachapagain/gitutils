@@ -36,15 +36,11 @@ func updateDirectoryTree() {
 	}
 
 	// make directory if not exist
-	newConfigDir := path.Join(home, switchConfigPath, newConfig.User.Username)
-	if !isFileExist(newConfigDir) {
-		_ = os.MkdirAll(newConfigDir, os.ModePerm)
+	newConfigfile := path.Join(home, switchConfigPath, newConfig.User.Username, ghConfigFile)
+	err = overrideFile(newConfigfile, fr)
+	if err != nil {
+		log.Fatal(err)
 	}
-
-	fw, _ := os.Create(path.Join(newConfigDir, ghConfigFile))
-	defer fw.Close()
-
-	fw.Write(fr)
 
 	log.Printf("Successfully updated config node as %s", newConfig.User.Username)
 }

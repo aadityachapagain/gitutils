@@ -17,5 +17,6 @@ Helpful for person who have more than 1 github users and need to switch between 
 	rootCmd.AddCommand(cmd.SwtichGit)
 	rootCmd.AddCommand(cmd.UpdateUser)
 	rootCmd.AddCommand(cmd.ListUser)
+	rootCmd.AddCommand(cmd.InitUser)
 	rootCmd.Execute()
 }
