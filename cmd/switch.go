@@ -46,7 +46,7 @@ func overrideFile(filepath string, content []byte) error {
 }
 
 func createCredential(username string, token string) (string, error) {
-	credentialFile := path.Join(home, switchConfigPath, credentialCacheFile)
+	credentialFile := path.Join(home, switchConfigPath, username, credentialCacheFile)
 
 	err := overrideFile(credentialFile, []byte(fmt.Sprintf(credentialFormatter, username, token)))
 	return credentialFile, err
