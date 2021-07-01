@@ -33,7 +33,7 @@ var InitUser = &cobra.Command{
 			}
 		}
 
-		bold.Print("Enter Github Username or Email: ")
+		bold.Print("Enter Github Username: ")
 		username := getStringInput()
 		fmt.Println("Go to https://github.com/settings/tokens/new and create new token")
 		fmt.Println("The minimum required scopes are 'repo', 'read:org', 'workflow'.")
@@ -65,7 +65,7 @@ var InitUser = &cobra.Command{
 		if err != nil {
 			log.Fatal(err)
 		}
-		git.CacheCredential(credentialCachepath, username)
+		git.CacheCredential(credentialCachepath)
 	},
 }
 

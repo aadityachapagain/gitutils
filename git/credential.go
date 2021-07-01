@@ -5,7 +5,7 @@ import (
 	"os/exec"
 )
 
-func CacheCredential(cache string, username string) error {
+func CacheCredential(cache string) error {
 	commands := []string{}
 
 	commands = append(commands, "config")
@@ -13,13 +13,5 @@ func CacheCredential(cache string, username string) error {
 	commands = append(commands, "credential.helper")
 	commands = append(commands, fmt.Sprintf("store --file %s", cache))
 	err := exec.Command("git", commands...).Run()
-	if err != nil {
-		return err
-	}
-
-	commands = []string{}
-	commands = append(commands, "config", "--global", "user.email", username)
-	err = exec.Command("git", commands...).Run()
-
 	return err
 }

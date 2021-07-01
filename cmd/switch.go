@@ -86,7 +86,7 @@ func switchConfig(newUser string) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	err = git.CacheCredential(credentialFile, newUserConfig.User.Username)
+	err = git.CacheCredential(credentialFile)
 	if err != nil {
 		log.Fatal(err)
 	}
