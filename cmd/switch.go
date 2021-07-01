@@ -40,7 +40,7 @@ func overrideFile(filepath string, content []byte) error {
 	if err != nil {
 		return err
 	}
-	f.Write(content)
+	f.WriteString(string(content))
 
 	return nil
 }
