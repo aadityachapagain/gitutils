@@ -7,6 +7,7 @@ import (
 	"os"
 	"os/exec"
 	"path"
+	"strings"
 
 	"github.com/aadityachapagain/gitutils/git"
 	"github.com/fatih/color"
@@ -21,25 +22,23 @@ var InitUser = &cobra.Command{
 		bold := color.New(color.Bold)
 		activeUserColor := color.New(color.FgHiMagenta).Add(color.Bold).Add(color.Italic)
 
-		activeUserConfig, err := getActiveUserConfig()
-		if err != nil {
-			log.Fatal(err)
+		activeUserConfig, _ := getActiveUserConfig()
+
+		if strings.TrimSpace(activeUserConfig.User.Username) != "" {
+			bold.Print("You are already Authenticated with : ")
+			activeUserColor.Println("*" + activeUserConfig.User.Username)
+			bold.Print("Do you want to re-authenticate ? (y/n)  ")
+			if getStringInput() != "y" {
+				return
+			}
 		}
 
-		bold.Print("You are already Authenticated with : ")
-		activeUserColor.Println("*" + activeUserConfig.User.Username)
-		bold.Print("Do you want to re-authenticate ? (y/n)  ")
-		if getStringInput() != "y" {
-			return
-		}
-
-		bold.Print("Enter Github Username: ")
+		bold.Print("Enter Github Username or Email: ")
 		username := getStringInput()
 		fmt.Println("Go to https://github.com/settings/tokens/new and create new token")
 		fmt.Println("The minimum required scopes are 'repo', 'read:org', 'workflow'.")
 		bold.Print("Paste your authentication token:")
 		token := getTokenInput()
-		fmt.Println("")
 
 		newUserConfig := &gitconfig{
 			User: useridentifier{

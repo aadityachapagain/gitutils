@@ -54,7 +54,7 @@ func getUserConfig(userConfigPath string) (gitconfig, error) {
 	currentconfig := gitconfig{}
 
 	if !isFileExist(userConfigPath) {
-		return gitconfig{}, fmt.Errorf("%s doesn't exist!\nTry login using github cli,  https://github.com/cli/cli#installation and run \">gitutils update\" ", userConfigPath)
+		return gitconfig{}, fmt.Errorf("%s doesn't exist!\nTry login using gitutils init", userConfigPath)
 	}
 
 	fr, err := os.ReadFile(userConfigPath)
