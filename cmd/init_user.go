@@ -66,7 +66,7 @@ var InitUser = &cobra.Command{
 		if err != nil {
 			log.Fatal(err)
 		}
-		git.CacheCredential(credentialCachepath)
+		git.CacheCredential(credentialCachepath, username)
 	},
 }
 
